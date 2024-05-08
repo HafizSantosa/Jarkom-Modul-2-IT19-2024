@@ -432,3 +432,6 @@ Yang pertama yaitu jalankan command:
 nano /etc/bind/named.conf.options
 ```
 Kemudian uncomment forwarder seperti pada gambar, Untuk IP diisi dengan IP Erangel.
+![](https://github.com/HafizSantosa/Jarkom-Modul-2-IT19-2024/blob/main/image/No%2011.png)
+
+Lalu restart bind9 dengan `service bind9 restart`.
