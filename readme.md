@@ -3,7 +3,7 @@
 | NRP | Nama Anggota |
 |-----|--------------|
 | 5027221061 | Hafiz Akmaldi Santosa |
-| 5027221061 | Hafiz Akmaldi Santosa |
+| 5027221049 | Arsyad Rizantha Maulana Salim |
 
 ## 0. Membuat jaringan komputer dengan topologi nomor 4 
 
