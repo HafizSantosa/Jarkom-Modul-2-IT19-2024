@@ -311,3 +311,124 @@ www     IN      CNAME   airdrop.it19.com.
 medkit  IN      A       10.73.3.4         // Tambahkan line ini
 @       IN      AAAA    ::1
 ```
+
+## 9. Membuat subdomain `siren.redzone.xxxx.com` dan mendelegasikan subdomain tersebut ke Georgopol
+### Konfigurasi Ponchiki:
+Yang pertama adalah jalankan command berikut:
+```
+mkdir /etc/bind/siren
+```
+Kemudian
+```
+cp /etc/bind/redzone/redzone.it19.com /etc/bind/siren/siren.redzone.it19.com
+nano /etc/bind/siren/siren.redzone.it19.com
+```
+Lalu tambahkan config sebagai berikut:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     redzone.it25.com. root.redzone.it19.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      redzone.it19.com.
+@       IN      A       10.73.2.3
+www     IN      CNAME   redzone.it19.com.
+siren   IN      A       10.73.4.2
+ns1     IN      A       10.73.4.2
+siren   IN      NS      ns1
+@       IN      AAAA    ::1
+```
+Lalu edit file `etc/bind/named.conf.options` pada Pochinki dan tambahkan line berikut:
+```
+allow-query{any;};
+```
+Kemudian jalankan `nano /etc/bind/named.conf.local`, lalu tambahkan konfigurasi berikut:
+```
+zone "siren.redzone.it29.com" {
+    type master;
+    file "/etc/bind/siren/siren.redzone.it29.com";
+    allow-transfer { 10.73.4.2; };
+};
+```
+Restart bind9 dengan `service bind9 restart`.
+
+### Konfigurasi Georgopol
+Langkah pertama adalah edit file `/etc/bind/named.conf.options` pada Georgopol
+```
+nano /etc/bind/named.conf.options
+```
+Lalu tambahkan line berikut:
+```
+allow-query{any;};
+```
+Kemudian jalankan `nano /etc/bind/named.conf.local`, dan tambahkan konfigurasi seperti berikut:
+```
+zone "siren.redzone.it19.com" {
+    type master;
+    file "/etc/bind/siren/siren.redzone.it19.com";
+};
+```
+Jalankan command:
+```
+mkdir /etc/bind/siren
+cp /etc/bind/db.local /etc/bind/siren/siren.redzone.it19.com
+```
+Buka dan edit konfigurasi file `/etc/bind/siren/siren.redzone.it19.com`:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     siren.redzone.it19.com. root.siren.redzone.it19.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      siren.redzone.it19.com.
+@       IN      A       10.73.4.2
+www     IN      CNAME   siren.redzone.it19.com.
+@       IN      AAAA    ::1
+```
+Restart bind9 dengan `service bind9 restart`.
+
+## 10. Buat subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com
+Jalankan command:
+```
+nano /etc/bind/siren/siren.redzone.it19.com
+```
+Lalu edit menjadi seperti di bawah ini:
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     siren.redzone.it19.com. root.siren.redzone.it19.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      siren.redzone.it19.com.
+@       IN      A       10.73.4.2
+www     IN      CNAME   siren.redzone.it19.com.
+log     IN      A       10.73.4.2
+www.log IN      CNAME   siren.redzone.it19.com.
+@       IN      AAAA    ::1
+```
+Terakhir restart bind9 dengan `service bind9 restart`.
+
+## 11. konfigurasi agar warga Erangel yang berada diluar Pochinki dapat mengakses jaringan luar melalui DNS Server Pochinki
+Yang pertama yaitu jalankan command:
+```
+nano /etc/bind/named.conf.options
+```
+Kemudian uncomment forwarder seperti pada gambar, Untuk IP diisi dengan IP Erangel.
