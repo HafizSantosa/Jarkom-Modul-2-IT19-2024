@@ -311,6 +311,7 @@ www     IN      CNAME   airdrop.it19.com.
 medkit  IN      A       10.73.3.4         // Tambahkan line ini
 @       IN      AAAA    ::1
 ```
+Lalu restart bind9 dengan `service bind9 restart`.
 
 ## 9. Membuat subdomain `siren.redzone.xxxx.com` dan mendelegasikan subdomain tersebut ke Georgopol
 ### Konfigurasi Ponchiki:
@@ -356,7 +357,7 @@ zone "siren.redzone.it29.com" {
     allow-transfer { 10.73.4.2; };
 };
 ```
-Restart bind9 dengan `service bind9 restart`.
+Lalu restart bind9 dengan `service bind9 restart`.
 
 ### Konfigurasi Georgopol
 Langkah pertama adalah edit file `/etc/bind/named.conf.options` pada Georgopol
@@ -426,7 +427,7 @@ www.log IN      CNAME   siren.redzone.it19.com.
 ```
 Terakhir restart bind9 dengan `service bind9 restart`.
 
-## 11. konfigurasi agar warga Erangel yang berada diluar Pochinki dapat mengakses jaringan luar melalui DNS Server Pochinki
+## 11. Konfigurasi agar warga Erangel yang berada diluar Pochinki dapat mengakses jaringan luar melalui DNS Server Pochinki
 Yang pertama yaitu jalankan command:
 ```
 nano /etc/bind/named.conf.options
