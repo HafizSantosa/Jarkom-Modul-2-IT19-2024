@@ -433,6 +433,79 @@ Yang pertama yaitu jalankan command:
 nano /etc/bind/named.conf.options
 ```
 Kemudian uncomment forwarder seperti pada gambar, Untuk IP diisi dengan IP Erangel.
-![](https://github.com/HafizSantosa/Jarkom-Modul-2-IT19-2024/blob/main/image/No%2011.png)
+
+![](image/No%2011.png)
 
 Lalu restart bind9 dengan `service bind9 restart`.
+
+## 12. Melakukan deploy web untuk melihat available sites.
+
+instalasi apache2 dan nginx
+
+```
+apt-get update
+apt-get install lynx apache2 php libapache2-mod-php7.0 nginx -y
+```
+
+masuk ke /etc/apache2/sites-available lalu copy file defaultnya
+
+```
+cp 000-default.conf jarkom-it19.conf
+```
+
+ubah isi filenya jarkom-it19.conf
+
+Hanya ubah bagian ini saja
+
+```
+<VirtualHost *:8080>  //ubah portnya menjadi 8080
+
+ServerAdmin webmaster@localhost
+DocumentRoot /var/www/jarkom-it19 //ubah document rootnya
+```
+
+Tambahkan port 8080 di /etc/apache2/ports,conf
+
+```
+Listen 8080
+```
+
+Aktifkan konfigurasi
+
+```
+a2ensite jarkom-it19.conf
+```
+
+Restart apache
+
+```
+service apache2 restart
+```
+
+buat directory jarkom-it19 di /var/www lalu tambahkan index phpnya
+
+```
+mkdir jarkom-it19
+
+
+<?php
+$hostname = gethostname();
+$date = date('Y-m-d H:i:s');
+$php_version = phpversion();
+$username = get_current_user();
+
+
+
+echo "Hello World!<br>";
+echo "Saya adalah: $username<br>";
+echo "Saat ini berada di: $hostname<br>";
+echo "Versi PHP yang saya gunakan: $php_version<br>";
+echo "Tanggal saat ini: $date<br>";
+?>
+```
+
+jalankan
+
+```
+lynx http://10.73.3.2:8080
+```
